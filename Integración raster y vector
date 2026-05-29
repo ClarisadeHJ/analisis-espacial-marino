@@ -1,0 +1,30 @@
+# =========================
+# 04. OVERLAY RASTER - VECTOR
+# =========================
+
+library(terra)
+library(sf)
+
+# -------------------------
+# 1. Cargar datos
+# -------------------------
+sst <- rast("data/sst.tif")
+reefs <- st_read("data/reefs.shp")
+
+# Convertir sf a terra
+reefs_vect <- vect(reefs)
+
+# -------------------------
+# 2. Extraer valores raster en polígonos
+# -------------------------
+sst_by_reef <- extract(sst, reefs_vect, fun = mean, na.rm = TRUE)
+
+# -------------------------
+# 3. Unir resultados al vector
+# -------------------------
+reefs$sst_mean <- sst_by_reef[,2]
+
+# -------------------------
+# 4. Resultado
+# -------------------------
+plot(reefs["sst_mean"])
