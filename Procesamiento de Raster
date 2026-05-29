@@ -1,0 +1,31 @@
+# =========================
+# 03. PROCESAMIENTO RASTER
+# =========================
+
+library(terra)
+
+# -------------------------
+# 1. Cargar raster
+# -------------------------
+sst <- rast("data/sst.tif")
+
+# -------------------------
+# 2. Explorar datos
+# -------------------------
+plot(sst)
+summary(sst)
+
+# -------------------------
+# 3. Recortar a área de estudio
+# -------------------------
+sst_crop <- crop(sst, vect("data/study_area.shp"))
+
+# -------------------------
+# 4. Enmascarar (mantener solo zona válida)
+# -------------------------
+sst_mask <- mask(sst_crop, vect("data/study_area.shp"))
+
+# -------------------------
+# 5. Estadísticas básicas
+# -------------------------
+global(sst_mask, fun = mean, na.rm = TRUE)
