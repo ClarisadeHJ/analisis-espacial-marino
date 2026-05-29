@@ -1,0 +1,40 @@
+# =========================
+# 02. ANÁLISIS VECTORIAL
+# =========================
+
+library(sf)
+library(dplyr)
+
+# -------------------------
+# 1. Cargar datos espaciales
+# -------------------------
+reefs <- st_read("data/reefs.shp")
+protected_areas <- st_read("data/mpa.shp")
+
+# -------------------------
+# 2. Verificar CRS
+# -------------------------
+st_crs(reefs)
+st_crs(protected_areas)
+
+# -------------------------
+# 3. Homologar proyección
+# -------------------------
+protected_areas <- st_transform(protected_areas, st_crs(reefs))
+
+# -------------------------
+# 4. Intersección
+# -------------------------
+reefs_in_protected <- st_intersection(reefs, protected_areas)
+
+# -------------------------
+# 5. Cobertura de protección
+# -------------------------
+coverage <- nrow(reefs_in_protected) / nrow(reefs)
+
+print(coverage)
+
+# -------------------------
+# 6. Buffer de presión (ejemplo)
+# -------------------------
+reefs_buffer <- st_buffer(reefs, dist = 5000)
