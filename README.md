@@ -1,2 +1,2 @@
 # analisis-espacial-marino
-R
+Scripts de R
