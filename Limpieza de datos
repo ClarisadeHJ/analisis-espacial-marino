@@ -1,0 +1,42 @@
+# =========================
+# 01. LIMPIEZA DE DATOS BIOLÓGICOS
+# =========================
+
+library(dplyr)
+
+# Cargar datos
+bio <- read.csv()
+
+# Inspección básica
+str(bio)
+summary(bio)
+
+# -------------------------
+# 1. Eliminar duplicados
+# -------------------------
+bio_clean <- bio %>%
+  distinct()
+
+# -------------------------
+# 2. Filtrar registros con coordenadas válidas
+# -------------------------
+bio_clean <- bio_clean %>%
+  filter(!is.na(lon), !is.na(lat))
+
+# -------------------------
+# 3. Filtrar coordenadas fuera de rango (ejemplo marino)
+# -------------------------
+bio_clean <- bio_clean %>%
+  filter(lat >= -90 & lat <= 90,
+         lon >= -180 & lon <= 180)
+
+# -------------------------
+# 4. Estandarizar nombres de especies (básico)
+# -------------------------
+bio_clean <- bio_clean %>%
+  mutate(species = tolower(species))
+
+# -------------------------
+# Resultado
+# -------------------------
+write.csv(bio_clean, "outputs/biodiversity_clean.csv", row.names = FALSE)
