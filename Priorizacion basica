@@ -1,0 +1,35 @@
+# =========================
+# 05. PRIORIZACIÓN SIMPLE
+# =========================
+
+library(dplyr)
+library(sf)
+
+# -------------------------
+# 1. Cargar capas
+# -------------------------
+reefs <- st_read("data/reefs.shp")
+
+# Ejemplo de variables
+reefs$richness <- runif(nrow(reefs), 1, 100)
+reefs$pressure <- runif(nrow(reefs), 0, 1)
+
+# -------------------------
+# 2. Normalizar variables
+# -------------------------
+reefs <- reefs %>%
+  mutate(
+    richness_norm = (richness - min(richness)) / (max(richness) - min(richness)),
+    pressure_norm = 1 - pressure
+  )
+
+# -------------------------
+# 3. Índice simple de prioridad
+# -------------------------
+reefs <- reefs %>%
+  mutate(priority_index = (richness_norm * 0.7) + (pressure_norm * 0.3))
+
+# -------------------------
+# 4. Visualización básica
+# -------------------------
+plot(reefs["priority_index"])
